@@ -22,7 +22,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  CCACHE_DIR: /workdir/.ccache
+  CCACHE_DIR: workdir/.ccache
   CCACHE_MAXSIZE: 6G
   REPO_URL: https://github.com/weekdaycare/immortalwrt-mt798x-6.6
   REPO_BRANCH: openwrt-24.10-6.6
@@ -53,18 +53,18 @@ jobs:
           sudo systemsetup -settimezone "$TZ"
 
           echo "📁 Creating workdir"
-          sudo mkdir -p /workdir
-          sudo chown $USER:$GROUPS /workdir
+          sudo mkdir -p workdir
+          sudo chown $USER:$GROUPS workdir
 
           echo "💾 Disk space after cleanup:"
           df -h
 
       - name: 🪜 Clone source code
-        working-directory: /workdir
+        working-directory: workdir
         run: |
           echo "📥 Cloning $REPO_URL (branch: $REPO_BRANCH)"
           git clone $REPO_URL -b $REPO_BRANCH --single-branch --filter=blob:none openwrt
-          ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+          ln -sf workdir/openwrt $GITHUB_WORKSPACE/openwrt
           echo "✅ Source code cloned successfully"
 
       - name: ⚙️ Load custom feeds
@@ -100,13 +100,13 @@ jobs:
       - name: ⚙️ Setup ccache cache
         uses: actions/cache@v4
         with:
-          path: /workdir/.ccache
+          path: workdir/.ccache
           key: ${{ runner.os }}-ccache-${{ env.REPO_BRANCH }}-${{ steps.config-hash.outputs.hash }}
 
       - name: ⚙️ Setup downloads cache
         uses: actions/cache@v4
         with:
-          path: /workdir/openwrt/dl
+          path: workdir/openwrt/dl
           key: ${{ runner.os }}-openwrt-dl-${{ env.REPO_BRANCH }}-${{ steps.config-hash.outputs.hash }}
 
       - name: 🔧 Configure ccache
@@ -171,7 +171,7 @@ jobs:
           df -h
           echo ""
           echo "📊 Build directory size:"
-          du -sh /workdir/openwrt 2>/dev/null || echo "Unable to calculate"
+          du -sh workdir/openwrt 2>/dev/null || echo "Unable to calculate"
 
       - name: 🪄 Upload bin directory
         uses: actions/upload-artifact@v4
