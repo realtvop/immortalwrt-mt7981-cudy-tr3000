@@ -47,7 +47,7 @@ jobs:
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
-          brew install coreutils diffutils findutils gawk gnu-getopt gnu-tar grep make ncurses pkg-config wget quilt xz python-psutil
+          brew install coreutils diffutils findutils gawk gnu-getopt gnu-tar grep make ncurses pkg-config wget quilt xz python-build
 
           echo "⏰ Setting timezone to $TZ"
           sudo systemsetup -settimezone "$TZ"
