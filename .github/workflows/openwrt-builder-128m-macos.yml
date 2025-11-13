@@ -47,7 +47,6 @@ jobs:
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
-          brew unlink awk
           brew install coreutils diffutils findutils gawk gnu-getopt gnu-tar grep make ncurses pkg-config wget quilt xz python-psutil
 
           echo "⏰ Setting timezone to $TZ"
@@ -58,7 +57,7 @@ jobs:
           sudo chown $USER:$GROUPS /workdir
 
           echo "💾 Disk space after cleanup:"
-          df -hT
+          df -h
 
       - name: 🪜 Clone source code
         working-directory: /workdir
@@ -169,7 +168,7 @@ jobs:
         if: (!cancelled())
         run: |
           echo "💾 Disk space usage:"
-          df -hT
+          df -h
           echo ""
           echo "📊 Build directory size:"
           du -sh /workdir/openwrt 2>/dev/null || echo "Unable to calculate"
