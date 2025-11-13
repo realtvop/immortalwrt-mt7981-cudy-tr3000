@@ -10,7 +10,7 @@
 # See /LICENSE for more information.
 #
 
-name: OpenWrt Builder 128M
+name: OpenWrt Builder 128M on macOS
 
 on:
   repository_dispatch:
