@@ -13,6 +13,11 @@
 name: OpenWrt Builder 256M
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - '**'
   repository_dispatch:
   workflow_dispatch:
 
@@ -212,8 +217,11 @@ jobs:
         id: tag
         if: env.UPLOAD_RELEASE == 'true' && !cancelled()
         run: |
-          RELEASE_TAG=$(date +"%Y.%m.%d-%H%M")
+          COMMIT_HASH=$(echo "${GITHUB_SHA}" | cut -c1-7)
+          RELEASE_TAG=$(date +"%Y.%m.%d-%H%M")-$COMMIT_HASH
           echo "release_tag=$RELEASE_TAG" >> $GITHUB_OUTPUT
+          echo "commit_hash=$COMMIT_HASH" >> $GITHUB_OUTPUT
+          echo "full_commit_hash=$GITHUB_SHA" >> $GITHUB_OUTPUT
 
           # 生成 release 信息
           cat > release.txt << EOF
@@ -223,6 +231,7 @@ jobs:
           **🌿 Branch:** $REPO_BRANCH
           **📱 Device:** $(cat openwrt/DEVICE_NAME 2>/dev/null || echo 'N/A')
           **📅 Build Date:** $(date +"%Y-%m-%d %H:%M:%S")
+          **🔢 Commit:** $GITHUB_SHA ($COMMIT_HASH)
           **🔨 Compiler:** GCC with ccache
 
           ## 📥 Download
